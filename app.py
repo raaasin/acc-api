@@ -5,7 +5,6 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.linear_model import Ridge
-from sklearn.linear_model import LinearRegression
 
 app = Flask(__name__)
 CORS(app)  
@@ -25,11 +24,11 @@ def predict():
     train_data = train_data.str.replace(',', '').astype(float)
     df = pd.DataFrame({'X': train_data, 'Year': y_data})
     X_train, X_test, y_train, y_test = train_test_split(df[['Year']], df['X'], test_size=0.2, random_state=42)
-    degree = 8
+    degree = 2
     poly_features = PolynomialFeatures(degree=degree)
     X_train_poly = poly_features.fit_transform(X_train)
     X_test_poly = poly_features.transform(X_test)
-    ridge_model = LinearRegression() 
+    ridge_model = Ridge(alpha=0.1) 
     ridge_model.fit(X_train_poly, y_train)
     
     X_to_predict_poly = poly_features.transform(np.array([[year_to_predict]]))
